@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>hello_world</name>
+            <name>large_led_display</name>
             <creation-uuid>a3245bd2-61bc-4336-9f02-5c8197b01109</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>

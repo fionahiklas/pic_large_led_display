@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=pic_hello_world
+PROJECTNAME=pic_large_led_display
 
 # Active Configuration
 DEFAULTCONF=default

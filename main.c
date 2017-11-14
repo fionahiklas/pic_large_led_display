@@ -2,12 +2,12 @@
  * File:   main.c
  * Author: Fiona Bianchi
  *
- * Created on 27 March 2016, 13:20
+ * Created on 14th November 2017
  */
 
 
 #include <xc.h>
-#include <pic16f628a.h>
+#include <pic16f877a.h>
 
 // CONFIG
 #pragma config FOSC = INTOSCIO  // Oscillator Selection bits (INTOSC oscillator: I/O function on RA6/OSC2/CLKOUT pin, I/O function on RA7/OSC1/CLKIN)

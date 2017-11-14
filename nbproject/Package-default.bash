@@ -10,9 +10,9 @@ CND_CONF=default
 CND_DISTDIR=dist
 TMPDIR=build/${CND_CONF}/${IMAGE_TYPE}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/pic_hello_world.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-OUTPUT_BASENAME=pic_hello_world.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-PACKAGE_TOP_DIR=pichelloworld/
+OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/pic_large_led_display.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+OUTPUT_BASENAME=pic_large_led_display.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+PACKAGE_TOP_DIR=piclargeleddisplay/
 
 # Functions
 function checkReturnCode
@@ -57,15 +57,15 @@ mkdir -p ${TMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory ${TMPDIR}/pichelloworld/bin
+makeDirectory ${TMPDIR}/piclargeleddisplay/bin
 copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/package/pichelloworld.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/package/piclargeleddisplay.tar
 cd ${TMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/pichelloworld.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/piclargeleddisplay.tar *
 checkReturnCode
 
 # Cleanup
