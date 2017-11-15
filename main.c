@@ -7,10 +7,10 @@
 
 
 #include <xc.h>
-#include <pic16f877a.h>
+#include <pic16f884.h>
 
 // CONFIG
-#pragma config FOSC = INTOSCIO  // Oscillator Selection bits (INTOSC oscillator: I/O function on RA6/OSC2/CLKOUT pin, I/O function on RA7/OSC1/CLKIN)
+#pragma config FOSC = INTRC_NOCLKOUT  // Oscillator Selection bits (INTOSC oscillator: I/O function on RA6/OSC2/CLKOUT pin, I/O function on RA7/OSC1/CLKIN)
 
 // Don't really need this for this program, in fact it should be off 
 // otherwise it'll keep restarting your code!
@@ -32,12 +32,35 @@ void delay(int delay) {
     }
 }
 
+/**
+ * Init code for slave I2C comms
+ * 
+ * Copied from https://electrosome.com/i2c-pic-microcontroller-mplab-xc8/ 
+ *
+ * @param address
+ */
+void I2C_Slave_Init(short address) 
+{
+  SSPSTAT = 0x80;    
+  SSPADD = address; //Setting address
+  SSPCON = 0x36;    //As a slave device
+  SSPCON2 = 0x01;
+  TRISC3 = 1;       //Setting as input as given in datasheet
+  TRISC4 = 1;       //Setting as input as given in datasheet
+  GIE = 1;          //Global interrupt enable
+  PEIE = 1;         //Peripheral interrupt enable
+  SSPIF = 0;        //Clear interrupt flag
+  SSPIE = 1;        //Synchronous serial port interrupt enable
+}
+
 void main(void) {
-    // Set clock to 4MHz
-    PCONbits.OSCF = 1;
-    TRISA0 = 0;
-    TRISA1 = 0;
-        
+
+    TRISA = 0;
+    TRISB = 0;
+    TRISD = 0;
+    TRISC = 0; // In actual fact pins C3 and C4 will be used for I2C comms
+    TRISE = 0;
+    
     while(1) {
         PORTA = 0x01;
                 
