@@ -1,31 +1,52 @@
 ## Overview 
 
-Driver for a matrix of LEDs.  The idea for this was a Christmas display that could show scrolling messages and 
-graphics.  Also I was originally looking at driving the output for a couple of 8x8 LED matrix displays also.
+PIC Code for LED driver circuit for LEGO lights.
 
-Based on the number of IO pins on the PIC16F877A (35 in total) it should be possible to drive 8 rows by 24 columns 
-and still have pins spare for I2C or serial comms.  The idea being for the PIC chip to do the heavy lifting of 
-running the display output but a Raspberry Pi to actually feed it the pixels to display.  
+My partner has made several of the LEGO Creator sets (Tower Bridge, Houses of Parliament so far)
+and we want to put these in cases and also add small LED lights.
 
-Also thought about driving several of these displays (with multiple PICs) from I2C and a local Raspberry PI.  OR using
-a serial connection (from Pi) over a current loop to another PIC which then interfaces to I2C.  For now, going to use I2C 
-as this is easiest and should be possible to locate Raspberry Pi near to PICs.
+Given the number of LEDs and power output (we're looking at maybe 40 or so, each 3V 20mA) it makes
+sense to use some sort of circuit to drive these in a matrix arrangement such that only a 
+limited number are on at any given time.  The device can whizz through all the rows/columns in 
+quick succession giving the illusion that all the LEDs are on permanently.
+
+This is a relatively simple project and it's just something I'm playing with to learn more 
+about micro controllers, PIC, electronics, etc
+
+## Getting Started
+
+### PICKit3
+
+I've got two of these, one an official device and another Chinese clone.
+
+#### Project Configuration
+
+* Find the `Production` -> `Set Project Configuration` -> `Customize ...` menu
+* From the dialog that appears select PICKit3 in the LHS and `Power` in the drop-down
+* Make sure that the "Power Target circuit from PICKit3" is selected if you use a programming board (I did)
+* Also I double clicked on the PICKit3 serial number/name and renamed the boards to distinguish between them
+
+#### 
+
 
 ## Circuit
 
-* Contains PIC 16F877A
-* 5V supply (from bench PSU)
-* LEDs (5mm)
- * Arranged in an 8 row x 24 column grid
- * Rows have series resistors to drop 5V
+* Contains PIC 16F884
+* Transistors to drive 5V and GND to LEDs
+* 5V supply 
+* LEDs surface mount 
+ * Arranged in an 8 row x 16 column grid
+ * Need to work columns change every clock tick
+
+
 
 
  
 
-### Resitor Calculation
+### Resistor Calculation
 
 Total V = 5V
-Forward voltage = 1.6V
+Forward voltage = 3V
 Resistor voltage drop = 3.4V
 Forward current = 20mA
 

@@ -7,9 +7,12 @@
 
 
 #include <xc.h>
-#include <pic16f884.h>
+#include <pic16f884.h> // Apparently this can get included automatically by xc.h
 
 // CONFIG
+// Refer to (for example) file:///Applications/microchip/xc8/v1.41/docs/chips/16f884.html
+// for pragma config directives for a given device
+//
 #pragma config FOSC = INTRC_NOCLKOUT  // Oscillator Selection bits (INTOSC oscillator: I/O function on RA6/OSC2/CLKOUT pin, I/O function on RA7/OSC1/CLKIN)
 
 // Don't really need this for this program, in fact it should be off 
@@ -23,6 +26,7 @@
 // even wave your hand near it or the circuit!  Do NOT waste the hours I did 
 // on trying to 'debug' weird glitches and pauses
 #pragma config LVP = OFF         // Low-Voltage Programming Enable bit (RB4/PGM pin has PGM function, low-voltage programming enabled)
+
 #pragma config CPD = OFF        // Data EE Memory Code Protection bit (Data memory code protection off)
 #pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
 
@@ -53,6 +57,10 @@ void I2C_Slave_Init(short address)
   SSPIE = 1;        //Synchronous serial port interrupt enable
 }
 
+
+/**
+ * Main entry point for the code
+ */
 void main(void) {
 
     TRISA = 0;
@@ -62,11 +70,11 @@ void main(void) {
     TRISE = 0;
     
     while(1) {
-        PORTA = 0x01;
+        PORTB = 0x02;
                 
         delay(10000);
         
-        PORTA = 0x02;
+        PORTB = 0x04;
         
         delay(10000);
     }
