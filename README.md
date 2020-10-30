@@ -66,6 +66,9 @@ Using 10k resistors for ease
 
 * [Timer interrupt](http://ww1.microchip.com/downloads/en/DeviceDoc/51702A.pdf)
 * [PIC interrupts](http://picguides.com/beginner/interrupts.php)
+* [error: variable has incomplete type void, C99 error](https://www.microchip.com/forums/m1058706.aspx)
+* [v2.00 xc8 interrupt syntax](https://www.microchip.com/forums/m1057526.aspx#1067160)
+ 
 
 ### C/C++
 

@@ -79,15 +79,14 @@ void I2C_Slave_Init(short address)
   SSPIE = 1;        //Synchronous serial port interrupt enable
 }
 
-void setup_timer() {
+void setup_timer(void) {
     TMR0 = 0;  // Clear timer0
     OPTION_REG = 0B00001000; // Setup TMR0 options
     T0IE = 1;  // Enable overflow interrupt
-   
 }
 
 
-void interrupt interrupt_service_routine(void) {
+void __interrupt()  isr(void) {
     if (T0IE && T0IF) {
         T0IF = 0;  // Clear interrupt flag 
         
