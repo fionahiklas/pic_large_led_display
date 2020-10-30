@@ -51,6 +51,9 @@ unsigned char row_values_by_column[16] = {
     0x0
 };
 
+unsigned char porta_value = 0;
+unsigned char portd_value = 0;
+unsigned char portb_value = 0;
 
 void delay(int delay) {
     while(--delay) {
@@ -90,23 +93,25 @@ void __interrupt()  isr(void) {
     if (T0IE && T0IF) {
         T0IF = 0;  // Clear interrupt flag 
         
-        if (PORTA == 0 && PORTD == 0) {
-            PORTA = 1;
+        if (porta_value == 0 && portd_value == 0) {
+            porta_value = 1;
             
-        } else if (PORTA > 0) {
-            PORTA <<= 1;
-            if (PORTA == 0) {
-                PORTD = 1;
+        } else if (porta_value > 0) {
+            porta_value <<= 1;
+            if (porta_value == 0) {
+                portd_value = 1;
             }
                 
         } else {
-            PORTD <<=1;
-            if (PORTD == 0) {
-                PORTA = 1;
+            portd_value <<=1;
+            if (portd_value == 0) {
+                porta_value = 1;
             }
         }
+        
+        PORTA = porta_value;
+        PORTD = portd_value;
     }
-    
 }
 
 
@@ -129,18 +134,14 @@ void main(void) {
     // Setup the ports in initial states
     PORTA = 0;
     PORTD = 0;
-    PORTB = 255; // Port B is inverted, drives PNP transistors
+    PORTB = 0x00; // Port B is inverted, drives PNP transistors
     
     setup_timer();
     
     
     while(1) {
-        PORTB = 0x02;
-                
+        PORTB = portb_value;
         delay(10000);
-        
-        PORTB = 0x04;
-        
-        delay(10000);
+        portb_value += 1;
     }
 }
