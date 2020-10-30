@@ -30,6 +30,28 @@
 #pragma config CPD = OFF        // Data EE Memory Code Protection bit (Data memory code protection off)
 #pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
 
+// The row values need to be inverted since the output drives
+// PNP transistors which require 0V output to switch on.
+unsigned char row_values_by_column[16] = {
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0,
+    0x0
+};
+
+
 void delay(int delay) {
     while(--delay) {
         delay = delay;
@@ -57,17 +79,61 @@ void I2C_Slave_Init(short address)
   SSPIE = 1;        //Synchronous serial port interrupt enable
 }
 
+void setup_timer() {
+    TMR0 = 0;  // Clear timer0
+    OPTION_REG = 0B00001000; // Setup TMR0 options
+    T0IE = 1;  // Enable overflow interrupt
+   
+}
+
+
+void interrupt interrupt_service_routine(void) {
+    if (T0IE && T0IF) {
+        T0IF = 0;  // Clear interrupt flag 
+        
+        if (PORTA == 0 && PORTD == 0) {
+            PORTA = 1;
+            
+        } else if (PORTA > 0) {
+            PORTA <<= 1;
+            if (PORTA == 0) {
+                PORTD = 1;
+            }
+                
+        } else {
+            PORTD <<=1;
+            if (PORTD == 0) {
+                PORTA = 1;
+            }
+        }
+    }
+    
+}
+
 
 /**
  * Main entry point for the code
  */
 void main(void) {
 
-    TRISA = 0;
-    TRISB = 0;
-    TRISD = 0;
-    TRISC = 0; // In actual fact pins C3 and C4 will be used for I2C comms
-    TRISE = 0;
+    GIE = 1;          // Global interrupt enable
+    PEIE = 1;         // Peripheral interrupt enable
+
+    TRISA = 0;  // This is the 8 LSB of the column output
+    TRISB = 0;  // This is the 8 bit row output for the LED matrix
+    TRISD = 0;  // This is the 8 MSB of the column output
+    TRISE = 0;  // Not currently used but set to output 
+    
+    // TODO: Sort this out for I2C comms
+    TRISC = 0;  // In actual fact pins C3 and C4 will be used for I2C comms
+    
+    // Setup the ports in initial states
+    PORTA = 0;
+    PORTD = 0;
+    PORTB = 255; // Port B is inverted, drives PNP transistors
+    
+    setup_timer();
+    
     
     while(1) {
         PORTB = 0x02;

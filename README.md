@@ -18,6 +18,10 @@ about micro controllers, PIC, electronics, etc
 ### PICKit3
 
 I've got two of these, one an official device and another Chinese clone.
+The Chinese clone isn't able to drive enough power from USB to run a simple
+circuit and program a device in-circuit.  However it seems capable of programming
+a PIC device using the provided board 
+
 
 #### Project Configuration
 
@@ -41,7 +45,7 @@ I've got two of these, one an official device and another Chinese clone.
 
 
 
- 
+## Notes 
 
 ### Resistor Calculation
 
@@ -56,3 +60,14 @@ Resistor = 3.4/0.02
 Using 10k resistors for ease
 
  
+## References
+
+### PIC
+
+* [Timer interrupt](http://ww1.microchip.com/downloads/en/DeviceDoc/51702A.pdf)
+* [PIC interrupts](http://picguides.com/beginner/interrupts.php)
+
+### C/C++
+
+* [Initialise Array](http://www.cplusplus.com/doc/tutorial/arrays/)
+* [Logical shift operators](https://stackoverflow.com/questions/7622/are-the-shift-operators-arithmetic-or-logical-in-c)
