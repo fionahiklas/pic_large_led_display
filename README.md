@@ -18,9 +18,15 @@ about micro controllers, PIC, electronics, etc
 ### PICKit3
 
 I've got two of these, one an official device and another Chinese clone.
-The Chinese clone isn't able to drive enough power from USB to run a simple
-circuit and program a device in-circuit.  However it seems capable of programming
-a PIC device using the provided board 
+
+The Chinese clone isn't able to drive enough power from USB to program a PIC
+device without any external power supply.  For example when trying to program 
+using the external board with ZIF socket I get an error from the process saying
+that it's trying to use 5V but only getting 4.875V.
+
+Actually when I tried this it might have been either the USB cable or the 
+connection to the ZIF board that was suspect.  Using the official PICkit3 and 
+replugged the board in and it seems to work now.
 
 
 #### Project Configuration
