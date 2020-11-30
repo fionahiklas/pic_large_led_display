@@ -75,7 +75,7 @@ void __interrupt()  isr(void) {
     if ( (T0IE == 1) && (T0IF == 1)) {
         T0IF = 0;  // Clear interrupt flag 
         
-/*        if (porta_value == 0 && portd_value == 0) {
+        if (porta_value == 0 && portd_value == 0) {
             porta_value = 1;
             
         } else if (porta_value > 0) {
@@ -93,7 +93,6 @@ void __interrupt()  isr(void) {
         
         PORTA = porta_value;
         PORTD = portd_value;
- */
     }
 }
 
@@ -103,8 +102,8 @@ void __interrupt()  isr(void) {
  */
 void main(void) {
 
-    GIE = 0;          // Global interrupt enable
-    PEIE = 0;         // Peripheral interrupt enable
+    GIE = 1;          // Global interrupt enable
+    PEIE = 0;         // Peripheral interrupt disable
 
     TRISA = 0;  // This is the 8 LSB of the column output
     TRISB = 0;  // This is the 8 bit row output for the LED matrix
@@ -119,21 +118,21 @@ void main(void) {
     PORTD = 0;
     PORTB = 0x00; // Port B is inverted, drives PNP transistors
     
-    //setup_timer();
+    setup_timer();
     
     
     while(1) {
         PORTB = 0x7F; //portb_value;
-        PORTA = 0xF7;
+        //PORTA = 0xF7;
         delay(1000);
         PORTB = 0x80; //portb_value += 1;
-        PORTA = 0x08;
+        //PORTA = 0x08;
         delay(1000);
         PORTB = 0x7F;
-        PORTA = 0xF7;
+        //PORTA = 0xF7;
         delay(1000);
         PORTB = 0x80;
-        PORTA = 0x08;
+        //PORTA = 0x08;
         delay(1000);
     }
 }
