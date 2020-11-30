@@ -10,25 +10,28 @@
 #include <pic16f884.h> // Apparently this can get included automatically by xc.h
 
 // CONFIG
-// Refer to (for example) file:///Applications/microchip/xc8/v1.41/docs/chips/16f884.html
+// Refer to (for example) file:///Applications/microchip/xc8/v2.20/docs/chips/16f884.html
 // for pragma config directives for a given device
 //
 #pragma config FOSC = INTRC_NOCLKOUT  // Oscillator Selection bits (INTOSC oscillator: I/O function on RA6/OSC2/CLKOUT pin, I/O function on RA7/OSC1/CLKIN)
 
 // Don't really need this for this program, in fact it should be off 
 // otherwise it'll keep restarting your code!
-#pragma config WDTE = ON        // Watchdog Timer Enable bit (WDT disabled)
+#pragma config WDTE = OFF        // Watchdog Timer Enable bit (WDT disabled)
 #pragma config PWRTE = OFF      // Power-up Timer Enable bit (PWRT disabled)
-#pragma config MCLRE = ON       // RA5/MCLR/VPP Pin Function Select bit (RA5/MCLR/VPP pin function is MCLR)
-#pragma config BOREN = ON       // Brown-out Detect Enable bit (BOD enabled)
+#pragma config MCLRE = OFF       // RE3/MCLR Pin Function Select bit (RE3/MCLR is digital input)
+#pragma config BOREN = OFF       // Brown-out Detect Enable bit (BOD disabled)
 
 // Make damn sure that this is OFF otherwise your PIC will go mental if you 
 // even wave your hand near it or the circuit!  Do NOT waste the hours I did 
 // on trying to 'debug' weird glitches and pauses
-#pragma config LVP = OFF         // Low-Voltage Programming Enable bit (RB4/PGM pin has PGM function, low-voltage programming enabled)
+#pragma config LVP = OFF         // Low-Voltage Programming Enable bit (RB3/PGM pin has PGM function, low-voltage programming enabled)
 
 #pragma config CPD = OFF        // Data EE Memory Code Protection bit (Data memory code protection off)
 #pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
+
+#pragma config DEBUG = OFF      // In-Circuit debugger disabled ( RB6 and RB7 are available as I/O pins)
+
 
 // The row values need to be inverted since the output drives
 // PNP transistors which require 0V output to switch on.
@@ -61,27 +64,6 @@ void delay(int delay) {
     }
 }
 
-/**
- * Init code for slave I2C comms
- * 
- * Copied from https://electrosome.com/i2c-pic-microcontroller-mplab-xc8/ 
- *
- * @param address
- */
-void I2C_Slave_Init(short address) 
-{
-  SSPSTAT = 0x80;    
-  SSPADD = address; //Setting address
-  SSPCON = 0x36;    //As a slave device
-  SSPCON2 = 0x01;
-  TRISC3 = 1;       //Setting as input as given in datasheet
-  TRISC4 = 1;       //Setting as input as given in datasheet
-  GIE = 1;          //Global interrupt enable
-  PEIE = 1;         //Peripheral interrupt enable
-  SSPIF = 0;        //Clear interrupt flag
-  SSPIE = 1;        //Synchronous serial port interrupt enable
-}
-
 void setup_timer(void) {
     TMR0 = 0;  // Clear timer0
     OPTION_REG = 0B00001000; // Setup TMR0 options
@@ -90,10 +72,10 @@ void setup_timer(void) {
 
 
 void __interrupt()  isr(void) {
-    if (T0IE && T0IF) {
+    if ( (T0IE == 1) && (T0IF == 1)) {
         T0IF = 0;  // Clear interrupt flag 
         
-        if (porta_value == 0 && portd_value == 0) {
+/*        if (porta_value == 0 && portd_value == 0) {
             porta_value = 1;
             
         } else if (porta_value > 0) {
@@ -111,6 +93,7 @@ void __interrupt()  isr(void) {
         
         PORTA = porta_value;
         PORTD = portd_value;
+ */
     }
 }
 
@@ -120,8 +103,8 @@ void __interrupt()  isr(void) {
  */
 void main(void) {
 
-    GIE = 1;          // Global interrupt enable
-    PEIE = 1;         // Peripheral interrupt enable
+    GIE = 0;          // Global interrupt enable
+    PEIE = 0;         // Peripheral interrupt enable
 
     TRISA = 0;  // This is the 8 LSB of the column output
     TRISB = 0;  // This is the 8 bit row output for the LED matrix
@@ -136,12 +119,21 @@ void main(void) {
     PORTD = 0;
     PORTB = 0x00; // Port B is inverted, drives PNP transistors
     
-    setup_timer();
+    //setup_timer();
     
     
     while(1) {
-        PORTB = portb_value;
-        delay(10000);
-        portb_value += 1;
+        PORTB = 0x7F; //portb_value;
+        PORTA = 0xF7;
+        delay(1000);
+        PORTB = 0x80; //portb_value += 1;
+        PORTA = 0x08;
+        delay(1000);
+        PORTB = 0x7F;
+        PORTA = 0xF7;
+        delay(1000);
+        PORTB = 0x80;
+        PORTA = 0x08;
+        delay(1000);
     }
 }
